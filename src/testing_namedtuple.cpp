@@ -1,7 +1,7 @@
 #include <fmt/core.h>
 
 #include <functional>
-
+#include <chrono>
 // https://github.com/QuantlabFinancial/cpp_tip_of_the_week/blob/master/229.md
 
 template <char... Cs>
@@ -53,25 +53,28 @@ struct namedtuple : Ts... {
   template <class... Us, char... Cs>
   [[nodiscard]] constexpr auto lookup(const named_field<Cs...>&) const -> decltype(auto) {
     return (
-        [&]<class U>() -> decltype(auto) {
+        [&](const auto& u) -> decltype(auto) {
+          using U = std::remove_cv_t<std::remove_reference_t<decltype(u)>>;
           if constexpr (U::name() == named_field<Cs...>::name) {
             return (static_cast<U&>(const_cast<namedtuple&>(*this)).value);
           } else {
             return no_value{};
           }
-        }.template operator()<Us>(),
+        }(Us{}),
         ...,
         no_value{});
   }
 
  public:
-  template <typename T>
-  constexpr auto operator[](const T& f) const -> decltype(auto) {
+  template <char... Cs>
+  constexpr auto operator[](const named_field<Cs...>& f) const -> decltype(auto) {
+    auto compute_start_time = std::chrono::steady_clock::now();
+    auto compute_stop_time = std::chrono::steady_clock::now();
     return lookup<std::add_const_t<Ts>...>(f);
   }
 
-  template <typename T>
-  constexpr auto operator[](const T& f) -> decltype(auto) {
+  template <char... Cs>
+  constexpr auto operator[](const named_field<Cs...>& f) -> decltype(auto) {
     return lookup<Ts...>(f);
   }
 };
@@ -86,10 +89,6 @@ int main() {
   static_assert(is_unique<decltype(t1), decltype(t2), decltype(t3)>);
   static_assert(!is_unique<decltype(t1), decltype(t2), decltype(t3), decltype(t4)>);
   const auto nt = namedtuple{"price"_t = 42, "size"_t = 100};
-  auto asd = "price"_t;
-  auto asd2 = asd = 20;
-  auto asd3 = asd = std::string("jafar");
-  fmt::print("  \"price\"_t: {}\n", asd2.name());
   fmt::print("42 == nt[\"price\"_t]: {}\n", 42 == nt["price"_t]);
   fmt::print("100 == nt[\"size\"_t]: {}\n", 100 == nt["size"_t]);
 
@@ -98,6 +97,13 @@ int main() {
   nt2["size"_t] = 34u;
   nt2["asd"_t] = "jafar";
   nt2["jafar"_t] = 100;
+  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_start_time = std::chrono::steady_clock::now();
+  nt2["price"_t] = 12;
+  nt2["size"_t] = 34u;
+  nt2["asd"_t] = "jafar";
+  nt2["jafar"_t] = 100;
+  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_stop_time = std::chrono::steady_clock::now();
+  fmt::print("time: {}\n", (compute_stop_time - compute_start_time).count());
   fmt::print("nt[\"price\"_t]: {}\n", nt2["price"_t]);
   fmt::print("nt[\"size\"_t]: {}\n", nt2["size"_t]);
   fmt::print("nt2[\"asd\"_t]: {}\n", nt2["asd"_t]);
