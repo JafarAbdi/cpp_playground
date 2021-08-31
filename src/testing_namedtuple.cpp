@@ -24,6 +24,16 @@ struct named_field {
   }
 };
 
+template <char const* Str, std::size_t... indices>
+constexpr auto make_named_field_impl(std::index_sequence<indices...>) {
+  return named_field<Str[indices]...>{};
+}
+
+template <const char* Str, std::size_t size>
+constexpr auto make_named_field() {
+  return make_named_field_impl<Str>(std::make_index_sequence<size>());
+}
+
 template <class TChar, TChar... Cs>
 constexpr auto operator""_t() {
   return named_field<Cs...>{};
@@ -68,8 +78,6 @@ struct namedtuple : Ts... {
  public:
   template <char... Cs>
   constexpr auto operator[](const named_field<Cs...>& f) const -> decltype(auto) {
-    auto compute_start_time = std::chrono::steady_clock::now();
-    auto compute_stop_time = std::chrono::steady_clock::now();
     return lookup<std::add_const_t<Ts>...>(f);
   }
 
@@ -77,9 +85,23 @@ struct namedtuple : Ts... {
   constexpr auto operator[](const named_field<Cs...>& f) -> decltype(auto) {
     return lookup<Ts...>(f);
   }
+
+  constexpr void print() const {
+    std::cout << "---START---\n";
+    ((std::cout << Ts::name() << ": " << lookup<Ts...>(make_named_field<Ts::name().data(), Ts::name().size()>())
+                << "\n"),
+     ...);
+    std::cout << "---END---\n";
+  }
 };
 template <class... Ts>
 namedtuple(Ts&&...) -> namedtuple<Ts...>;
+
+// template <typename... Ts>
+// void func(const namedtuple<Ts...>& nt) {
+//   ((std::cout << Ts::name() << ": " << nt[make_named_field<Ts::name().data(), Ts::name().size()>()] << " - "), ...)
+//       << "\n";
+// }
 
 int main() {
   constexpr auto t1 = "price"_t = 20;
@@ -89,6 +111,8 @@ int main() {
   static_assert(is_unique<decltype(t1), decltype(t2), decltype(t3)>);
   static_assert(!is_unique<decltype(t1), decltype(t2), decltype(t3), decltype(t4)>);
   const auto nt = namedtuple{"price"_t = 42, "size"_t = 100};
+  fmt::print("HOLA: {}\n", creator<5>("jasdasd"));
+  nt.print();
   fmt::print("42 == nt[\"price\"_t]: {}\n", 42 == nt["price"_t]);
   fmt::print("100 == nt[\"size\"_t]: {}\n", 100 == nt["size"_t]);
 
@@ -97,15 +121,18 @@ int main() {
   nt2["size"_t] = 34u;
   nt2["asd"_t] = "jafar";
   nt2["jafar"_t] = 100;
-  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_start_time = std::chrono::steady_clock::now();
+  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_start_time =
+      std::chrono::steady_clock::now();
   nt2["price"_t] = 12;
   nt2["size"_t] = 34u;
   nt2["asd"_t] = "jafar";
   nt2["jafar"_t] = 100;
-  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_stop_time = std::chrono::steady_clock::now();
+  std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> compute_stop_time =
+      std::chrono::steady_clock::now();
   fmt::print("time: {}\n", (compute_stop_time - compute_start_time).count());
   fmt::print("nt[\"price\"_t]: {}\n", nt2["price"_t]);
   fmt::print("nt[\"size\"_t]: {}\n", nt2["size"_t]);
   fmt::print("nt2[\"asd\"_t]: {}\n", nt2["asd"_t]);
   fmt::print("nt2[\"jafar\"_t]: {}\n", nt2["jafar"_t]);
+  nt2.print();
 }
