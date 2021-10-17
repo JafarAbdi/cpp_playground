@@ -12,6 +12,7 @@
 #include <string>
 #include <string_view>
 #include <thread>
+#include <utility>
 #include <vector>
 
 using namespace std::string_literals;
@@ -258,8 +259,8 @@ class ScopedTimer<Res(Args...)> {
   using ShutdownCallback = std::function<Res(double, Args...)>;
 
   template <std::enable_if_t<std::is_void_v<Res>, int> = 0>
-  ScopedTimer(const ShutdownCallback& cb, Args&&... args)
-      : shutdown_cb_(cb), start_(Clock::now()), args_(0.0, std::forward<Args>(args)...) {}
+  ScopedTimer(ShutdownCallback  cb, Args&&... args)
+      : shutdown_cb_(std::move(cb)), start_(Clock::now()), args_(0.0, std::forward<Args>(args)...) {}
   ScopedTimer(const ScopedTimer&) = delete;
   ScopedTimer(ScopedTimer&&) = delete;
   ScopedTimer& operator=(const ScopedTimer&) = delete;
