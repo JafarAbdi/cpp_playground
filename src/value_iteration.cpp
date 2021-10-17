@@ -7,6 +7,8 @@
 #include <iterator>
 #include <magic_enum.hpp>
 #include <optional>
+#include <unordered_map>
+#include <vector>
 
 const std::string source_path = __FILE__;
 

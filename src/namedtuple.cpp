@@ -75,8 +75,9 @@ constexpr std::string_view compile_string_to_view(const char (&s)[N]) {
     return COMPILE_STRING();                                                            \
   }()
 
-void print(auto fixed_string) {
-  static_assert(fixed_string == "printable");
+template <typename T>
+void print(T fixed_string) {
+  static_assert(fixed_string == std::string_view("printable") || fixed_string == std::string_view("jafar"));
   fmt::print("`{}` is printable", fixed_string);
 }
 
@@ -84,7 +85,8 @@ int main() {
   constexpr auto asd = FIXED_STRING("jafar");
   constexpr auto asd2 = FIXED_STRING("jafar");
   static_assert(std::string_view(asd) == asd2);
-  print(FIXED_STRING("jafar"));
+  print(FIXED_STRING("printable"));
+  print(asd);
   auto t = std::make_shared<verbose_type>();
   auto t2 = std::make_shared<const verbose_type>();
   fmt::print("t: {}\n", static_cast<void*>(&t));

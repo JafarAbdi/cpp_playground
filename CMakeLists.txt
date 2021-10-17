@@ -55,8 +55,8 @@ target_link_libraries(serialization_variant PRIVATE fmt::fmt Boost::boost
 add_executable(overloader src/overloader.cpp)
 target_link_libraries(overloader PRIVATE fmt::fmt)
 
-add_executable(playground src/value_iteration.cpp)
-target_link_libraries(playground magic_enum::magic_enum fmt::fmt)
+add_executable(value_iteration src/value_iteration.cpp)
+target_link_libraries(value_iteration magic_enum::magic_enum fmt::fmt)
 
 add_executable(concept_t src/concept_t.cpp)
 target_link_libraries(concept_t PRIVATE fmt::fmt)

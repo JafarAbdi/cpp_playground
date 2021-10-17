@@ -111,7 +111,7 @@ struct ObjManager {
   ObjManager(const ObjManager&) = delete;
   void operator=(const ObjManager&) = delete;
   ~ObjManager() {
-    if (obj_) fmt::print("Deleteing the object {}\n", obj_->id_);
+    if (obj_) fmt::print("Deleting the object {}\n", obj_->id_);
   }
 
  private:

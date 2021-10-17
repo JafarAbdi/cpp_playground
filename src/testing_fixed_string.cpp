@@ -2,9 +2,10 @@
 #include <fmt/ranges.h>
 
 #include <cstddef>
+#include <fixed_string.hpp>
 #include <string_view>
 #include <utility>
-#include <fixed_string.hpp>
+#include <vector>
 
 struct Message {
   std::string description;
