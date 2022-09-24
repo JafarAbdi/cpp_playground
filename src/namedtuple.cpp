@@ -25,14 +25,14 @@ struct my_type {
 
 struct verbose_type {
   verbose_type() { puts("verbose_type: ctor"); }
-  verbose_type(const verbose_type& rhs) { puts("verbose_type: copy-ctor"); }
-  verbose_type(verbose_type&& rhs) noexcept { puts("verbose_type: move-ctor"); }
+  verbose_type(const verbose_type& /*rhs*/) { puts("verbose_type: copy-ctor"); }
+  verbose_type(verbose_type&& /*rhs*/) noexcept { puts("verbose_type: move-ctor"); }
   ~verbose_type() { puts("verbose_type: dtor"); }
-  verbose_type& operator=(const verbose_type& rhs) {
+  verbose_type& operator=(const verbose_type& /*rhs*/) {
     puts("verbose_type: copy-operator");
     return *this;
   }
-  verbose_type& operator=(verbose_type&& rhs) noexcept {
+  verbose_type& operator=(verbose_type&& /*rhs*/) noexcept {
     puts("verbose_type: move-operator");
     return *this;
   }
@@ -82,8 +82,11 @@ void print(T fixed_string) {
 }
 
 int main() {
+  static_assert(std::string_view("jafar") == "jafar", "What the fuck");
+  constexpr std::string_view hola("asd");
   constexpr auto asd = FIXED_STRING("jafar");
   constexpr auto asd2 = FIXED_STRING("jafar");
+  static_assert(hola == "asd");
   static_assert(std::string_view(asd) == asd2);
   print(FIXED_STRING("printable"));
   print(asd);

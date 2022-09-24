@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <string>
 #include <type_traits>
 // friend injection

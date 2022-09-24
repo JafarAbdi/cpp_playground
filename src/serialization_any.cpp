@@ -104,19 +104,19 @@ int main(int argc, char** argv) {
     boost::archive::text_iarchive ia(iss);
     ia >> new_data;
   }
-  for (const auto& n : new_data) {
-    if (n.second.type() == typeid(int))
-      fmt::print("{}: {}\n", n.first, std::any_cast<int>(n.second));
-    if (n.second.type() == typeid(std::string))
-      fmt::print("{}: {}\n", n.first, std::any_cast<std::string>(n.second));
-    if (n.second.type() == typeid(double))
-      fmt::print("{}: {}\n", n.first, std::any_cast<double>(n.second));
-    if (n.second.type() == typeid(std::vector<int>))
-      fmt::print("{}: {}\n", n.first,
-                 fmt::join(std::any_cast<std::vector<int>>(n.second), ", "));
-    if (n.second.type() == typeid(std::vector<std::string>))
-      fmt::print(
-          "{}: {}\n", n.first,
-          fmt::join(std::any_cast<std::vector<std::string>>(n.second), ", "));
-  }
+  /* for (const auto& n : new_data) { */
+  /*   if (n.second.type() == typeid(int)) */
+  /*     fmt::print("{}: {}\n", n.first, std::any_cast<int>(n.second)); */
+  /*   if (n.second.type() == typeid(std::string)) */
+  /*     fmt::print("{}: {}\n", n.first, std::any_cast<std::string>(n.second)); */
+  /*   if (n.second.type() == typeid(double)) */
+  /*     fmt::print("{}: {}\n", n.first, std::any_cast<double>(n.second)); */
+  /*   if (n.second.type() == typeid(std::vector<int>)) */
+  /*     fmt::print("{}: {}\n", n.first, */
+  /*                fmt::join(std::any_cast<std::vector<int>>(n.second), ", ")); */
+  /*   if (n.second.type() == typeid(std::vector<std::string>)) */
+  /*     fmt::print( */
+  /*         "{}: {}\n", n.first, */
+  /*         fmt::join(std::any_cast<std::vector<std::string>>(n.second), ", ")); */
+  /* } */
 }

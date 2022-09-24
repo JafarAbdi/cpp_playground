@@ -87,4 +87,11 @@ target_link_libraries(
                      range-v3-concepts fixed-string)
 #target_compile_options(static_map PRIVATE -Xclang -ast-print -fsyntax-only)
 
+add_executable(effective_cpp src/effective_cpp.cpp)
+target_link_libraries(effective_cpp PRIVATE fmt::fmt)
+
+add_executable(playground src/playground.cpp)
+target_link_libraries(playground PRIVATE fmt::fmt)
+
 add_subdirectory(src/design_patterns)
+add_subdirectory(src/functional)

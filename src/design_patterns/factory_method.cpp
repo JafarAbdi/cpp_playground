@@ -1,5 +1,7 @@
 #include <fmt/core.h>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 // the factory method is a method, and an abstract factory is an object.
 // Factory Method pattern uses inheritance and relies on a subclass to handle the desired object instantiation.
@@ -114,7 +116,7 @@ class XObjectPainter : public ObjectPainter {
 };
 
 int main(int argc, char** argv) {
-  ObjectPainter object_painter;
+  DashObjectPainter object_painter;
   auto objects = object_painter.createObjects();
   //  XObjectFactory factory;
   //  auto objects = object_painter.createObjects(factory);
