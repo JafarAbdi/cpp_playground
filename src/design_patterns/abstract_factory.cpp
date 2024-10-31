@@ -2,9 +2,9 @@
 #include <fmt/ranges.h>
 
 #include <cstddef>
+#include <memory>
 #include <string_view>
 #include <utility>
-#include <memory>
 
 struct Product1 {};
 struct Product1A : Product1 {};
@@ -20,29 +20,17 @@ struct AbstractFactory {
 };
 
 struct FactoryA : AbstractFactory {
-  Product1 createProduct1() const override
-  {
-    return Product1A{};
-  }
-  Product2 createProduct2() const override
-  {
-    return Product2A{};
-  }
+  Product1 createProduct1() const override { return Product1A{}; }
+  Product2 createProduct2() const override { return Product2A{}; }
 };
 
 struct FactoryB : AbstractFactory {
-  Product1 createProduct1() const override
-  {
-    return Product1B{};
-  }
-  Product2 createProduct2() const override
-  {
-    return Product2B{};
-  }
+  Product1 createProduct1() const override { return Product1B{}; }
+  Product2 createProduct2() const override { return Product2B{}; }
 };
 
 int main(int argc, char** argv) {
-  std::unique_ptr<AbstractFactory> abstract_factory;
-  abstract_factory = std::make_unique<FactoryA>();
+  auto abstract_factory = std::make_unique<FactoryA>();
   abstract_factory->createProduct1();
+  fmt::print("Product1A created");
 }

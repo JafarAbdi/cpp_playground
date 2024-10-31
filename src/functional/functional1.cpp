@@ -7,6 +7,7 @@
 #include <range/v3/range/conversion.hpp>
 
 int main(int argc, char* argv[]) {
+  fmt::print("Prompt: ");
   ranges::getlines(std::cin);
   auto ints = ranges::views::iota(1);
   auto ints_squared = ints | ranges::views::transform([](const auto v) { return v * v; });

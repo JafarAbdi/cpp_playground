@@ -1,0 +1,4 @@
+-xc++
+-I.pixi/envs/default/include
+-Iinclude/
+-std=c++20
